@@ -1,0 +1,18 @@
+# Python & Virtual Environment
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+
+# OS & Editor
+.DS_Store
+*.log
+
+# User-specific runtime state
+data/personal_baseline.json
+
+# Raw downloaded Kaggle images/labels (already extracted into data/posture_dataset.csv & data/kaggle_spine_regressor.joblib)
+data/kaggle_posture_keypoints/
+data/pose_landmarker_lite.task
