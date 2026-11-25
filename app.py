@@ -389,6 +389,14 @@ with dock_c4:
 with dock_c5:
     stats_popover = st.popover("📊 สถิติ & กฎ", width="stretch")
 
+with stats_popover:
+    stats_rules_header = st.markdown("**1. กฎการตัดสินใจของระบบ (Rule-Based Expert System)**")
+    stats_rules_spot = st.empty()
+    st.markdown("**2. ตำแหน่งท่านั่งของคุณเทียบกับฐานข้อมูล K-NN**")
+    stats_chart_spot = st.empty()
+    st.markdown("**3. ข้อมูลอ้างอิงที่ใกล้เคียงที่สุด 5 ลำดับ (K-NN)**")
+    stats_neighbors_spot = st.empty()
+
 
 # ---------------------------------------------------------------------------
 # Helper Functions to Render Top Bar, Toast, and Stats Popover
@@ -463,22 +471,21 @@ def render_stats_popover_content(
     metrics: PoseMetrics,
     neighbors_info: list[dict[str, Any]],
     rule_res: RuleEvaluationResult,
+    update_chart: bool = True,
 ) -> None:
-    with stats_popover:
-        st.markdown("**1. กฎการตัดสินใจของระบบ (Rule-Based Expert System)**")
-        rules_df = pd.DataFrame(rule_res.rule_trace)
-        rules_df["สถานะ"] = rules_df["matched"].map(lambda x: "🟢 ทำงานอยู่" if x else "⚪ รอเงื่อนไข")
-        rules_display = rules_df.rename(
-            columns={
-                "rule_id": "กฎ",
-                "name": "หมวดหมู่",
-                "condition": "เงื่อนไข (ภาษาคน)",
-                "effect": "ผลลัพธ์",
-            }
-        )[["กฎ", "สถานะ", "เงื่อนไข (ภาษาคน)", "ผลลัพธ์"]]
-        st.dataframe(rules_display, width="stretch", hide_index=True)
+    rules_df = pd.DataFrame(rule_res.rule_trace)
+    rules_df["สถานะ"] = rules_df["matched"].map(lambda x: "🟢 ทำงานอยู่" if x else "⚪ รอเงื่อนไข")
+    rules_display = rules_df.rename(
+        columns={
+            "rule_id": "กฎ",
+            "name": "หมวดหมู่",
+            "condition": "เงื่อนไข (ภาษาคน)",
+            "effect": "ผลลัพธ์",
+        }
+    )[["กฎ", "สถานะ", "เงื่อนไข (ภาษาคน)", "ผลลัพธ์"]]
+    stats_rules_spot.dataframe(rules_display, width="stretch", hide_index=True)
 
-        st.markdown("**2. ตำแหน่งท่านั่งของคุณเทียบกับฐานข้อมูล K-NN**")
+    if update_chart:
         df_all = st.session_state.knn_classifier.dataset_df
         color_map = {
             "Good Posture": "#22C55E",
@@ -509,7 +516,6 @@ def render_stats_popover_content(
                 name="ตำแหน่งของคุณ",
             )
         )
-        # Place legend cleanly below the chart so it NEVER overlaps title or points
         fig_scatter.update_layout(
             template="plotly_dark",
             paper_bgcolor="#1C1F26",
@@ -525,19 +531,18 @@ def render_stats_popover_content(
                 title_text="",
             ),
         )
-        st.plotly_chart(fig_scatter, width="stretch")
+        stats_chart_spot.plotly_chart(fig_scatter, width="stretch")
 
-        st.markdown("**3. ข้อมูลอ้างอิงที่ใกล้เคียงที่สุด 5 ลำดับ (K-NN)**")
-        neighbors_df = pd.DataFrame(neighbors_info).rename(
-            columns={
-                "rank": "ลำดับ",
-                "label": "ท่านั่ง",
-                "neck_angle": "มุมคอ (°)",
-                "torso_angle": "มุมหลัง (°)",
-                "euclidean_distance": "ระยะห่าง (Distance)",
-            }
-        )[["ลำดับ", "ท่านั่ง", "มุมคอ (°)", "มุมหลัง (°)", "ระยะห่าง (Distance)"]]
-        st.dataframe(neighbors_df, width="stretch", hide_index=True)
+    neighbors_df = pd.DataFrame(neighbors_info).rename(
+        columns={
+            "rank": "ลำดับ",
+            "label": "ท่านั่ง",
+            "neck_angle": "มุมคอ (°)",
+            "torso_angle": "มุมหลัง (°)",
+            "euclidean_distance": "ระยะห่าง (Distance)",
+        }
+    )[["ลำดับ", "ท่านั่ง", "มุมคอ (°)", "มุมหลัง (°)", "ระยะห่าง (Distance)"]]
+    stats_neighbors_spot.dataframe(neighbors_df, width="stretch", hide_index=True)
 
 
 # ---------------------------------------------------------------------------
@@ -574,6 +579,7 @@ else:
         st.session_state.camera_on = False
         st.error("ไม่สามารถเปิดกล้องเว็บแคมได้ กรุณาตรวจสอบสิทธิ์การใช้กล้องบน macOS")
     else:
+        frame_counter = 0
         try:
             while st.session_state.camera_on and cap.isOpened():
                 ok, bgr_frame = cap.read()
@@ -620,10 +626,25 @@ else:
                         rule_res=rule_res,
                         is_live=True,
                     )
+
+                    # Update stats & rules popover live while webcam is running
+                    if frame_counter % 8 == 0:
+                        live_neighbors = st.session_state.knn_classifier.explain_neighbors(
+                            live_metrics.neck_angle,
+                            live_metrics.torso_angle,
+                            live_metrics.shoulder_tilt,
+                        )
+                        render_stats_popover_content(
+                            live_metrics,
+                            live_neighbors,
+                            rule_res,
+                            update_chart=(frame_counter % 24 == 0),
+                        )
                 else:
                     rgb_display = cv2.cvtColor(annotated_bgr, cv2.COLOR_BGR2RGB)
                     video_spot.image(rgb_display, channels="RGB", width="stretch")
 
+                frame_counter += 1
                 time.sleep(0.03)
         finally:
             cap.release()
