@@ -84,10 +84,6 @@ def extract_kaggle_spine_dataframe(kaggle_root: Path = KAGGLE_DIR) -> pd.DataFra
             torso_deg = float(np.clip(95.0 - effective_torso_tilt, 55.0, 102.0))
             neck_deg = float(np.clip(neck_deg, 4.0, 55.0))
 
-            spine_len = math.hypot(c_x - s_x, c_y - s_y)
-            lateral_offset = abs(c_x - s_x) / max(20.0, spine_len)
-            tilt_metric = float(np.clip(lateral_offset * 0.12, 0.002, 0.085))
-
             if torso_deg <= 79.5 or (upper_back_tilt >= 18.0 and kyph_deg >= 18.0):
                 label = "Slouching"
             elif neck_deg >= 19.5:
@@ -99,7 +95,6 @@ def extract_kaggle_spine_dataframe(kaggle_root: Path = KAGGLE_DIR) -> pd.DataFra
                 {
                     "neck_angle": round(neck_deg, 2),
                     "torso_angle": round(torso_deg, 2),
-                    "shoulder_tilt": round(tilt_metric, 4),
                     "label": label,
                 }
             )
@@ -126,42 +121,36 @@ def generate_seed_dataframe(samples_per_class: int = 100, random_seed: int = 42)
     # Fallback matched to the real Kaggle spine keypoint distribution
     good_neck = np.clip(rng.normal(loc=9.5, scale=4.0, size=samples_per_class), 3.5, 18.5)
     good_torso = np.clip(rng.normal(loc=89.5, scale=3.8, size=samples_per_class), 82.0, 98.0)
-    good_tilt = np.clip(np.abs(rng.normal(loc=0.009, scale=0.006, size=samples_per_class)), 0.001, 0.030)
 
-    for neck, torso, tilt in zip(good_neck, good_torso, good_tilt):
+    for neck, torso in zip(good_neck, good_torso):
         rows.append(
             {
                 "neck_angle": round(float(neck), 2),
                 "torso_angle": round(float(torso), 2),
-                "shoulder_tilt": round(float(tilt), 4),
                 "label": "Good Posture",
             }
         )
 
     fh_neck = np.clip(rng.normal(loc=28.5, scale=6.2, size=samples_per_class), 20.0, 48.5)
     fh_torso = np.clip(rng.normal(loc=86.8, scale=3.5, size=samples_per_class), 80.5, 95.0)
-    fh_tilt = np.clip(np.abs(rng.normal(loc=0.018, scale=0.010, size=samples_per_class)), 0.003, 0.055)
 
-    for neck, torso, tilt in zip(fh_neck, fh_torso, fh_tilt):
+    for neck, torso in zip(fh_neck, fh_torso):
         rows.append(
             {
                 "neck_angle": round(float(neck), 2),
                 "torso_angle": round(float(torso), 2),
-                "shoulder_tilt": round(float(tilt), 4),
                 "label": "Forward Head",
             }
         )
 
     slouch_neck = np.clip(rng.normal(loc=26.0, scale=7.0, size=samples_per_class), 14.0, 45.0)
     slouch_torso = np.clip(rng.normal(loc=66.5, scale=5.5, size=samples_per_class), 55.0, 79.0)
-    slouch_tilt = np.clip(np.abs(rng.normal(loc=0.041, scale=0.016, size=samples_per_class)), 0.010, 0.085)
 
-    for neck, torso, tilt in zip(slouch_neck, slouch_torso, slouch_tilt):
+    for neck, torso in zip(slouch_neck, slouch_torso):
         rows.append(
             {
                 "neck_angle": round(float(neck), 2),
                 "torso_angle": round(float(torso), 2),
-                "shoulder_tilt": round(float(tilt), 4),
                 "label": "Slouching",
             }
         )

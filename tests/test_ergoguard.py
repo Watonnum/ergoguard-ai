@@ -1,7 +1,7 @@
 """
 Automated Unit & Integration Tests for ErgoGuard AI (CSC472 Project).
-Verifies Phase 1 (Dataset Generation) and Phase 2 (Pose Math, K-NN Classifier,
-and Rule-Based Expert System R1-R4 transitions).
+Verifies Phase 1 (Kaggle Spine Dataset Generation) and Phase 2 (Pose Math,
+2-Feature K-NN Classifier, and Rule-Based Expert System R1-R4 transitions).
 """
 
 from __future__ import annotations
@@ -11,12 +11,11 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from src.data_generator import POSTURE_CLASSES, ensure_dataset_exists, generate_seed_dataframe
+from src.data_generator import POSTURE_CLASSES, ensure_dataset_exists
 from src.knn_classifier import PostureKNNClassifier
 from src.pose_tracker import (
     PoseTracker,
     calculate_neck_angle_2d,
-    calculate_shoulder_tilt,
     calculate_torso_angle_2d,
     detect_is_side_profile,
 )
@@ -30,7 +29,7 @@ def test_data_generator_creates_balanced_dataset(tmp_path: Path) -> None:
 
     df = pd.read_csv(saved_path)
     assert len(df) == 300
-    assert list(df.columns) == ["neck_angle", "torso_angle", "shoulder_tilt", "label"]
+    assert list(df.columns) == ["neck_angle", "torso_angle", "label"]
     for cls in POSTURE_CLASSES:
         assert (df["label"] == cls).sum() >= 60
 
@@ -52,11 +51,7 @@ def test_pose_angle_math_and_auto_fallback() -> None:
     torso_slouch = calculate_torso_angle_2d(shoulder_xy=(0.68, 0.50), hip_xy=(0.50, 0.80))
     assert torso_slouch <= 70.0
 
-    # 5. Shoulder alignment delta
-    tilt = calculate_shoulder_tilt(left_shoulder_y=0.50, right_shoulder_y=0.52, shoulder_span=0.30)
-    assert 0.015 <= tilt <= 0.025
-
-    # 6. Front-webcam auto-fallback when hips are occluded
+    # 5. Front-webcam auto-fallback when hips are occluded
     f_neck_good, f_torso_good = PoseTracker._compute_front_fallback_angles(
         ear_mid_y=0.32,
         sh_mid_y=0.52,
@@ -93,7 +88,6 @@ def test_pose_tracker_simulation_and_blank_frame() -> None:
     sim_frame, sim_metrics = tracker.render_simulation_frame(
         neck_angle=12.0,
         torso_angle=94.0,
-        shoulder_tilt=0.01,
         status="PASS",
     )
     assert sim_frame.shape == (460, 720, 3)
@@ -108,29 +102,29 @@ def test_knn_classifier_predictions_and_calibration(tmp_path: Path) -> None:
     assert clf.cv_accuracy >= 0.92
 
     # Test Good Posture prediction
-    label_good, conf_good, dists_good = clf.predict(11.0, 95.0, 0.01)
+    label_good, conf_good, dists_good = clf.predict(11.0, 91.0)
     assert label_good == "Good Posture"
     assert conf_good >= 0.8
     assert len(dists_good) == 5
 
     # Test Forward Head prediction
-    label_fh, conf_fh, _ = clf.predict(38.0, 89.0, 0.02)
+    label_fh, conf_fh, _ = clf.predict(34.0, 88.0)
     assert label_fh == "Forward Head"
     assert conf_fh >= 0.8
 
     # Test Slouching prediction
-    label_slouch, conf_slouch, _ = clf.predict(30.0, 68.0, 0.04)
+    label_slouch, conf_slouch, _ = clf.predict(28.0, 66.0)
     assert label_slouch == "Slouching"
     assert conf_slouch >= 0.8
 
     # Test Explainable AI neighbor details
-    neighbors = clf.explain_neighbors(38.0, 89.0, 0.02)
+    neighbors = clf.explain_neighbors(34.0, 88.0)
     assert len(neighbors) == 5
     assert neighbors[0]["rank"] == 1
     assert "euclidean_distance" in neighbors[0]
 
     # Test live calibration sample addition
-    new_count = clf.add_calibration_sample(14.0, 92.0, 0.015, "Good Posture", replicas=1)
+    new_count = clf.add_calibration_sample(14.0, 92.0, "Good Posture", replicas=1)
     assert new_count == 301
 
     reset_count = clf.reset_to_seed_dataset()
@@ -221,8 +215,8 @@ def test_end_to_end_pipeline_and_app_syntax() -> None:
     clf = PostureKNNClassifier()
     engine = ErgonomicRuleEngine(threshold_sec=5.0)
 
-    sim_frame, metrics = tracker.render_simulation_frame(36.0, 88.0, 0.02, status="ALERT")
-    pred_label, conf, dists = clf.predict(metrics.neck_angle, metrics.torso_angle, metrics.shoulder_tilt)
+    sim_frame, metrics = tracker.render_simulation_frame(36.0, 88.0, status="ALERT")
+    pred_label, conf, dists = clf.predict(metrics.neck_angle, metrics.torso_angle)
     res = engine.evaluate(pred_label, metrics.neck_angle, metrics.torso_angle, override_bad_duration_sec=6.0)
 
     assert sim_frame.shape == (460, 720, 3)
@@ -232,18 +226,6 @@ def test_end_to_end_pipeline_and_app_syntax() -> None:
     assert res.status == "ALERT"
     assert res.triggered_rule_id == "R3"
     tracker.close()
-
-
-def test_shoulder_tilt_does_not_hijack_good_posture_into_slouching() -> None:
-    """Regression test: upright neck (11 deg) and torso (95 deg) must remain Good Posture even if shoulder_tilt is high."""
-    clf = PostureKNNClassifier()
-    label, conf, _ = clf.predict(11.0, 95.0, 0.185)
-    assert label == "Good Posture"
-    assert conf >= 0.8
-
-    # Side-profile shoulder span (< 0.24) must damp perspective shoulder tilt below 0.035
-    damped_tilt = calculate_shoulder_tilt(0.58, 0.654, shoulder_span=0.12)
-    assert damped_tilt <= 0.030
 
 
 def test_monitoring_ergo_score_stays_in_amber_band_and_combined_slouch_neck_warning() -> None:
@@ -275,20 +257,18 @@ def test_nose_between_shoulders_and_personal_baseline_normalization() -> None:
     assert tracker.model_name == "pose_landmarker_heavy.task"
     assert tracker._resolve_view_mode_with_hysteresis(False) is False
     for _ in range(4):
-        # 4 glitch frames (< 6 threshold) must NOT flip mode to side profile
         assert tracker._resolve_view_mode_with_hysteresis(True) is False
 
-    # 4. Personal Baseline Normalization for different body types (e.g. heavier build / high camera)
-    tracker.set_personal_baseline(raw_neck_angle=22.0, raw_torso_angle=85.0, raw_shoulder_tilt=0.03)
-    norm_n, norm_t, norm_s = tracker._apply_personal_baseline(22.0, 85.0, 0.03)
+    # 4. Personal Baseline Normalization for different body types (persisted cleanly)
+    tracker.set_personal_baseline(raw_neck_angle=22.0, raw_torso_angle=85.0, persist=False)
+    norm_n, norm_t = tracker._apply_personal_baseline(22.0, 85.0)
     assert norm_n == pytest.approx(11.5, abs=0.1)
     assert norm_t == pytest.approx(94.5, abs=0.1)
 
-    # When that same user bends neck +20 deg and slouches torso -22 deg from their baseline:
-    slouch_n, slouch_t, _ = tracker._apply_personal_baseline(42.0, 63.0, 0.03)
+    slouch_n, slouch_t = tracker._apply_personal_baseline(42.0, 63.0)
     assert slouch_n == pytest.approx(31.5, abs=0.1)
     assert slouch_t == pytest.approx(72.5, abs=0.1)
-    tracker.clear_personal_baseline()
+    tracker.clear_personal_baseline(persist=False)
 
     # 5. Standby frame renders cleanly without text clutter
     standby = tracker.render_camera_standby_frame()
@@ -307,10 +287,3 @@ def test_nose_between_shoulders_and_personal_baseline_normalization() -> None:
         lateral_neck_deg=14.0,
     )
     assert tilt_neck >= 35.0
-
-
-
-
-
-
-

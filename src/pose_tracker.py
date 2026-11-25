@@ -53,7 +53,6 @@ IDX_RIGHT_HIP = 24
 # Ergonomic standard reference values (RULA/REBA upright neutral baseline)
 STANDARD_UPRIGHT_NECK_DEG = 11.5
 STANDARD_UPRIGHT_TORSO_DEG = 94.5
-STANDARD_UPRIGHT_TILT = 0.010
 
 # Module-level singleton to prevent MediaPipe LiteRT C++ accelerator deadlocks on re-init
 _SHARED_LANDMARKER: Any = None
@@ -131,13 +130,11 @@ class PoseMetrics:
     detected: bool
     neck_angle: float = 0.0
     torso_angle: float = 90.0
-    shoulder_tilt: float = 0.0
     active_side: str = "NONE"       # 'LEFT' | 'RIGHT' | 'BILATERAL' | 'SIMULATED'
     view_mode: str = "NONE"         # 'SIDE_PROFILE' | 'FRONT_HYBRID' | 'FRONT_FALLBACK' | 'SIMULATED'
     visibility_score: float = 0.0
     raw_neck_angle: float = 0.0
     raw_torso_angle: float = 90.0
-    raw_shoulder_tilt: float = 0.0
     baseline_calibrated: bool = False
 
     def to_dict(self) -> dict[str, Any]:
@@ -176,27 +173,6 @@ def calculate_torso_angle_2d(
     tilt_deg = math.degrees(tilt_rad)
     torso_angle = 95.0 - tilt_deg
     return round(float(np.clip(torso_angle, 45.0, 110.0)), 2)
-
-
-def calculate_shoulder_tilt(
-    left_shoulder_y: float,
-    right_shoulder_y: float,
-    shoulder_span: float = 0.30,
-) -> float:
-    """
-    Compute scale-invariant vertical alignment delta between left and right shoulders.
-    Dividing by shoulder_span makes it invariant to camera distance and body width,
-    while damping perspective foreshortening when turned sideways (shoulder_span < 0.20).
-    """
-    raw_diff = abs(float(left_shoulder_y) - float(right_shoulder_y))
-    span = float(shoulder_span)
-    if span < 0.20:
-        perspective_factor = max(0.05, (span / 0.20) ** 2)
-        return round(float(np.clip(raw_diff * perspective_factor, 0.0, 0.025)), 4)
-
-    # Normalize by shoulder span relative to standard 0.30 width so broad/narrow shoulders scale fairly
-    scaled_diff = raw_diff * (0.28 / max(0.20, span))
-    return round(float(np.clip(scaled_diff, 0.0, 0.20)), 4)
 
 
 def detect_is_side_profile(
@@ -261,7 +237,6 @@ class PoseTracker:
 
         self._smoothed_neck: float | None = None
         self._smoothed_torso: float | None = None
-        self._smoothed_tilt: float | None = None
 
         # Hysteresis state to prevent view_mode flickering
         self._current_is_side: bool | None = None
@@ -273,7 +248,6 @@ class PoseTracker:
         self.baseline_calibrated: bool = False
         self.baseline_neck_deg: float = STANDARD_UPRIGHT_NECK_DEG
         self.baseline_torso_deg: float = STANDARD_UPRIGHT_TORSO_DEG
-        self.baseline_tilt: float = STANDARD_UPRIGHT_TILT
         self._load_personal_baseline()
 
         self.pose = None
@@ -307,7 +281,6 @@ class PoseTracker:
                 if data.get("calibrated"):
                     self.baseline_neck_deg = float(data["baseline_neck_deg"])
                     self.baseline_torso_deg = float(data["baseline_torso_deg"])
-                    self.baseline_tilt = float(data.get("baseline_tilt", STANDARD_UPRIGHT_TILT))
                     self.baseline_calibrated = True
         except Exception:
             self.baseline_calibrated = False
@@ -316,7 +289,6 @@ class PoseTracker:
         self,
         raw_neck_angle: float,
         raw_torso_angle: float,
-        raw_shoulder_tilt: float = 0.01,
         persist: bool = True,
     ) -> None:
         """
@@ -325,7 +297,6 @@ class PoseTracker:
         """
         self.baseline_neck_deg = float(raw_neck_angle)
         self.baseline_torso_deg = float(raw_torso_angle)
-        self.baseline_tilt = float(raw_shoulder_tilt)
         self.baseline_calibrated = True
         self.reset_smoothing()
         if persist:
@@ -337,7 +308,6 @@ class PoseTracker:
                             "calibrated": True,
                             "baseline_neck_deg": round(self.baseline_neck_deg, 2),
                             "baseline_torso_deg": round(self.baseline_torso_deg, 2),
-                            "baseline_tilt": round(self.baseline_tilt, 4),
                         },
                         indent=2,
                     ),
@@ -351,7 +321,6 @@ class PoseTracker:
         self.baseline_calibrated = False
         self.baseline_neck_deg = STANDARD_UPRIGHT_NECK_DEG
         self.baseline_torso_deg = STANDARD_UPRIGHT_TORSO_DEG
-        self.baseline_tilt = STANDARD_UPRIGHT_TILT
         self.reset_smoothing()
         if persist and self.baseline_path.exists():
             try:
@@ -363,26 +332,22 @@ class PoseTracker:
         self,
         raw_neck: float,
         raw_torso: float,
-        raw_tilt: float,
-    ) -> tuple[float, float, float]:
+    ) -> tuple[float, float]:
         """Shift raw angles by the user's personal baseline delta if calibrated."""
         if not self.baseline_calibrated:
-            return raw_neck, raw_torso, raw_tilt
+            return raw_neck, raw_torso
 
         adj_neck = STANDARD_UPRIGHT_NECK_DEG + (raw_neck - self.baseline_neck_deg)
         adj_torso = STANDARD_UPRIGHT_TORSO_DEG + (raw_torso - self.baseline_torso_deg)
-        adj_tilt = max(0.002, abs(raw_tilt - self.baseline_tilt) + STANDARD_UPRIGHT_TILT)
 
         return (
             round(float(np.clip(adj_neck, 4.0, 60.0)), 2),
             round(float(np.clip(adj_torso, 50.0, 105.0)), 2),
-            round(float(np.clip(adj_tilt, 0.0, 0.20)), 4),
         )
 
     def reset_smoothing(self) -> None:
         self._smoothed_neck = None
         self._smoothed_torso = None
-        self._smoothed_tilt = None
 
     def _resolve_view_mode_with_hysteresis(self, candidate_is_side: bool) -> bool:
         """Require 6 consecutive frames before flipping between FRONT and SIDE_PROFILE."""
@@ -402,21 +367,18 @@ class PoseTracker:
 
         return self._current_is_side
 
-    def _apply_ema(self, neck: float, torso: float, tilt: float) -> tuple[float, float, float]:
+    def _apply_ema(self, neck: float, torso: float) -> tuple[float, float]:
         if self._smoothed_neck is None:
             self._smoothed_neck = neck
             self._smoothed_torso = torso
-            self._smoothed_tilt = tilt
         else:
             a = self.ema_alpha
             self._smoothed_neck = a * neck + (1.0 - a) * self._smoothed_neck
             self._smoothed_torso = a * torso + (1.0 - a) * self._smoothed_torso
-            self._smoothed_tilt = a * tilt + (1.0 - a) * self._smoothed_tilt
 
         return (
             round(float(self._smoothed_neck), 2),
             round(float(self._smoothed_torso), 2),
-            round(float(self._smoothed_tilt), 4),
         )
 
     def _extract_landmarks(self, rgb_frame: np.ndarray) -> Any | None:
@@ -520,8 +482,6 @@ class PoseTracker:
         # Strictly require hips to be well inside the frame (y <= 0.88 and high confidence)
         # so off-screen desk sitting NEVER uses MediaPipe's hallucinated hip coordinates
         hip_truly_visible = (hip_vis >= 0.65) and (0.10 <= hip.y <= 0.88)
-
-        raw_tilt = calculate_shoulder_tilt(l_sh.y, r_sh.y, shoulder_span)
 
         if is_side_profile:
             view_mode = "SIDE_PROFILE"
@@ -632,22 +592,20 @@ class PoseTracker:
             )
 
         # Apply Personal Baseline Normalization (if user calibrated their body shape)
-        norm_neck, norm_torso, norm_tilt = self._apply_personal_baseline(raw_neck, raw_torso, raw_tilt)
+        norm_neck, norm_torso = self._apply_personal_baseline(raw_neck, raw_torso)
 
         # Smooth with EMA
-        neck_angle, torso_angle, shoulder_tilt = self._apply_ema(norm_neck, norm_torso, norm_tilt)
+        neck_angle, torso_angle = self._apply_ema(norm_neck, norm_torso)
 
         metrics = PoseMetrics(
             detected=True,
             neck_angle=neck_angle,
             torso_angle=torso_angle,
-            shoulder_tilt=shoulder_tilt,
             active_side=active_side,
             view_mode=view_mode,
             visibility_score=round(float(best_upper_vis), 2),
             raw_neck_angle=raw_neck,
             raw_torso_angle=raw_torso,
-            raw_shoulder_tilt=raw_tilt,
             baseline_calibrated=self.baseline_calibrated,
         )
 
@@ -1029,7 +987,6 @@ class PoseTracker:
         self,
         neck_angle: float,
         torso_angle: float,
-        shoulder_tilt: float,
         status: str = "PASS",
         width: int = 720,
         height: int = 460,
@@ -1083,13 +1040,11 @@ class PoseTracker:
             detected=True,
             neck_angle=round(float(neck_angle), 2),
             torso_angle=round(float(torso_angle), 2),
-            shoulder_tilt=round(float(shoulder_tilt), 4),
             active_side="SIMULATED",
             view_mode="SIMULATED",
             visibility_score=1.0,
             raw_neck_angle=round(float(neck_angle), 2),
             raw_torso_angle=round(float(torso_angle), 2),
-            raw_shoulder_tilt=round(float(shoulder_tilt), 4),
             baseline_calibrated=self.baseline_calibrated,
         )
         return frame, metrics

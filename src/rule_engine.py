@@ -100,32 +100,29 @@ class ErgonomicRuleEngine:
         knn_label: str,
         neck_angle: float,
         torso_angle: float,
-        shoulder_tilt: float = 0.0,
         current_time: float | None = None,
         override_bad_duration_sec: float | None = None,
     ) -> RuleEvaluationResult:
         """
         Run Forward-Chaining inference over current facts:
           Fact 1: knn_label
-          Fact 2: neck_angle, torso_angle, shoulder_tilt
+          Fact 2: neck_angle, torso_angle
           Fact 3: bad_posture_duration_sec
         """
         now = float(current_time) if current_time is not None else time.monotonic()
         neck_val = float(neck_angle)
         torso_val = float(torso_angle)
-        tilt_val = float(shoulder_tilt)
 
         # Update session counts
         self.total_evaluations += 1
         if knn_label in self.class_counts:
             self.class_counts[knn_label] += 1
 
-        # Fact check for Rule R1 (Good Posture condition: neck < 20°, torso > 80°, shoulder_tilt < 0.045)
+        # Fact check for Rule R1 (Good Posture condition: neck < 20° AND torso > 80°)
         is_good_posture = (
             (knn_label == "Good Posture")
             and (neck_val < 20.0)
             and (torso_val > 80.0)
-            and (tilt_val < 0.045)
         )
 
         if is_good_posture:
@@ -256,7 +253,6 @@ class ErgonomicRuleEngine:
         ergo_score = self._compute_ergo_score(
             neck_angle=neck_val,
             torso_angle=torso_val,
-            shoulder_tilt=tilt_val,
             bad_duration_sec=self.bad_duration_sec,
             session_good_ratio=session_good_ratio,
             status=status,
@@ -279,31 +275,29 @@ class ErgonomicRuleEngine:
         self,
         neck_angle: float,
         torso_angle: float,
-        shoulder_tilt: float,
         bad_duration_sec: float,
         session_good_ratio: float,
         status: str,
     ) -> float:
         """
-        Compute smooth real-time Ergo Score (0-100):
-        - ~90-100 when upright in Good Posture (PASS)
-        - Gently glides in the yellow warning band (75-88) during MONITORING (< threshold_sec)
-        - Drops into the red alert band (35-58) only once sustained >= threshold_sec (ALERT)
+        Compute smooth real-time Ergo Score (0-100) from neck_angle, torso_angle,
+        bad_duration_sec, and session_good_ratio:
+        - ~88-100 when upright in Good Posture (PASS)
+        - Gently glides in the yellow warning band (75-87.5) during MONITORING (< threshold_sec)
+        - Drops into the red alert band (32-58) only once sustained >= threshold_sec (ALERT)
         """
         neck_excess = max(0.0, neck_angle - 14.0)
         torso_deficit = max(0.0, 90.0 - torso_angle)
-        tilt_excess = max(0.0, shoulder_tilt - 0.02) * 120.0
         window_ratio = min(1.0, max(0.0, bad_duration_sec / max(1.0, self.threshold_sec)))
 
         if status == "PASS":
-            angle_minor_penalty = (neck_excess * 0.6) + (torso_deficit * 0.5) + tilt_excess
+            angle_minor_penalty = (neck_excess * 0.6) + (torso_deficit * 0.5)
             raw_score = 97.5 - angle_minor_penalty + (session_good_ratio - 0.5) * 4.0
             target_score = float(min(100.0, max(88.0, raw_score)))
             self._smoothed_ergo_score = 0.55 * target_score + 0.45 * self._smoothed_ergo_score
             return float(min(100.0, max(88.0, self._smoothed_ergo_score)))
 
         if status == "MONITORING":
-            # During grace period (< threshold_sec), stay in yellow band (75.0 - 87.5)
             severity_penalty = min(4.5, (neck_excess * 0.08) + (torso_deficit * 0.08))
             time_glide_penalty = window_ratio * 8.5
             target_score = 88.0 - severity_penalty - time_glide_penalty
@@ -312,7 +306,7 @@ class ErgonomicRuleEngine:
             return float(min(87.5, max(75.0, self._smoothed_ergo_score)))
 
         # status == "ALERT" (sustained bad posture >= threshold_sec)
-        angle_penalty = (neck_excess * 0.85) + (torso_deficit * 0.85) + tilt_excess
+        angle_penalty = (neck_excess * 0.85) + (torso_deficit * 0.85)
         overtime_sec = max(0.0, bad_duration_sec - self.threshold_sec)
         overtime_penalty = min(14.0, overtime_sec * 0.6)
         target_score = 62.0 - min(18.0, angle_penalty * 0.45) - overtime_penalty

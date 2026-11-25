@@ -1,301 +1,301 @@
-neck_angle,torso_angle,shoulder_tilt,label
-27.26,59.86,0.0659,Slouching
-24.3,93.4,0.0184,Forward Head
-17.51,93.59,0.0106,Good Posture
-13.75,90.21,0.0095,Good Posture
-8.96,89.81,0.002,Good Posture
-22.48,84.17,0.002,Forward Head
-16.62,79.38,0.0032,Slouching
-48.22,55.0,0.085,Slouching
-4.0,70.43,0.0332,Slouching
-20.06,89.17,0.0057,Forward Head
-35.38,81.5,0.0087,Forward Head
-37.57,73.9,0.0221,Slouching
-6.13,92.43,0.005,Good Posture
-7.62,74.7,0.0239,Slouching
-55.0,55.0,0.0604,Slouching
-7.37,85.84,0.0146,Good Posture
-5.67,91.47,0.0041,Good Posture
-4.0,86.52,0.0026,Good Posture
-4.54,90.99,0.0089,Good Posture
-7.97,72.36,0.0096,Slouching
-4.0,84.09,0.0178,Good Posture
-18.36,83.83,0.002,Good Posture
-19.95,75.32,0.0098,Slouching
-55.0,55.0,0.085,Slouching
-11.88,72.69,0.0099,Slouching
-18.44,91.82,0.007,Good Posture
-20.9,92.27,0.0102,Forward Head
-6.44,82.63,0.0184,Good Posture
-47.51,90.18,0.0273,Forward Head
-4.39,93.18,0.0033,Good Posture
-52.79,91.46,0.0289,Forward Head
-47.0,67.54,0.0577,Slouching
-13.06,78.07,0.0023,Slouching
-4.0,84.48,0.002,Good Posture
-7.74,84.8,0.0156,Good Posture
-12.63,87.09,0.0087,Good Posture
-23.71,82.48,0.0362,Forward Head
-36.33,76.36,0.0256,Slouching
-11.5,91.84,0.0025,Good Posture
-12.11,90.67,0.0128,Good Posture
-14.91,67.73,0.0492,Slouching
-11.14,94.73,0.0063,Good Posture
-28.61,87.9,0.0092,Forward Head
-11.79,85.11,0.0026,Good Posture
-51.51,55.0,0.085,Slouching
-4.0,85.66,0.002,Good Posture
-49.89,66.15,0.067,Slouching
-4.0,72.33,0.0249,Slouching
-55.0,74.14,0.046,Slouching
-23.55,58.93,0.0514,Slouching
-4.0,86.15,0.0039,Good Posture
-4.0,69.87,0.0126,Slouching
-4.0,77.32,0.0026,Slouching
-4.13,79.43,0.007,Slouching
-6.28,85.09,0.002,Good Posture
-17.95,92.47,0.0088,Good Posture
-5.31,89.99,0.002,Good Posture
-4.0,65.15,0.009,Slouching
-9.02,93.29,0.0087,Good Posture
-37.08,86.25,0.0048,Forward Head
-30.24,61.67,0.0352,Slouching
-13.62,69.45,0.0184,Slouching
-55.0,55.0,0.085,Slouching
-20.84,55.0,0.076,Slouching
-35.8,55.0,0.0737,Slouching
-27.92,79.43,0.0031,Slouching
-26.1,92.96,0.0177,Forward Head
-39.43,67.59,0.0505,Slouching
-44.23,83.66,0.0196,Forward Head
-48.3,70.17,0.0425,Slouching
-11.92,85.18,0.0062,Good Posture
-9.3,86.03,0.0037,Good Posture
-6.52,82.53,0.017,Good Posture
-26.83,84.62,0.018,Forward Head
-19.88,74.91,0.0091,Slouching
-4.0,55.0,0.0708,Slouching
-14.0,81.88,0.0085,Good Posture
-26.19,61.11,0.0538,Slouching
-10.97,91.84,0.0081,Good Posture
-4.04,90.88,0.002,Good Posture
-9.6,87.02,0.004,Good Posture
-4.0,77.12,0.027,Slouching
-17.02,61.02,0.0488,Slouching
-12.81,84.44,0.0034,Good Posture
-29.78,89.02,0.0211,Forward Head
-19.37,91.54,0.0185,Good Posture
-14.62,78.83,0.0116,Slouching
-7.24,79.26,0.0172,Slouching
-19.49,61.26,0.0218,Slouching
-22.2,66.99,0.0266,Slouching
-21.55,69.61,0.0326,Slouching
-4.0,89.27,0.0028,Good Posture
-11.66,71.2,0.0246,Slouching
-25.54,85.83,0.0056,Forward Head
-10.75,87.97,0.0175,Good Posture
-10.51,62.85,0.0363,Slouching
-8.76,55.0,0.0647,Slouching
-16.65,76.48,0.0111,Slouching
-35.24,69.06,0.0302,Slouching
-24.51,91.95,0.019,Forward Head
-15.33,75.08,0.0155,Slouching
-25.79,88.06,0.0246,Forward Head
-8.06,74.96,0.0234,Slouching
-23.92,84.48,0.0176,Forward Head
-21.76,81.6,0.0266,Forward Head
-28.22,88.38,0.028,Forward Head
-6.06,92.34,0.0076,Good Posture
-14.03,82.33,0.0079,Good Posture
-55.0,57.85,0.0667,Slouching
-43.01,73.48,0.0412,Slouching
-55.0,67.66,0.0578,Slouching
-24.18,79.66,0.0369,Forward Head
-26.19,88.84,0.0101,Forward Head
-4.0,91.34,0.0047,Good Posture
-7.84,62.75,0.0482,Slouching
-15.05,81.87,0.0067,Good Posture
-10.14,84.53,0.0126,Good Posture
-19.14,55.0,0.069,Slouching
-8.91,85.99,0.0026,Good Posture
-22.38,57.96,0.033,Slouching
-39.68,78.27,0.0089,Slouching
-55.0,69.17,0.0556,Slouching
-55.0,55.0,0.085,Slouching
-41.7,55.0,0.0655,Slouching
-21.45,91.55,0.0085,Forward Head
-30.95,80.5,0.0275,Forward Head
-6.56,71.68,0.0145,Slouching
-40.71,74.41,0.0543,Slouching
-18.87,93.72,0.0127,Good Posture
-19.01,86.26,0.0255,Good Posture
-25.97,80.78,0.0302,Forward Head
-32.11,86.92,0.0136,Forward Head
-43.97,82.55,0.041,Forward Head
-26.72,89.23,0.0277,Forward Head
-43.61,55.0,0.0702,Slouching
-16.88,78.57,0.0182,Slouching
-9.42,76.93,0.0153,Slouching
-28.66,81.71,0.0232,Forward Head
-6.6,94.55,0.0035,Good Posture
-4.0,67.24,0.0337,Slouching
-4.0,65.72,0.0436,Slouching
-4.81,64.55,0.0509,Slouching
-25.65,82.82,0.002,Forward Head
-18.3,91.51,0.0111,Good Posture
-9.39,88.15,0.0048,Good Posture
-16.08,86.09,0.002,Good Posture
-4.0,77.27,0.0256,Slouching
-28.8,83.29,0.0352,Forward Head
-55.0,55.7,0.0805,Slouching
-14.07,91.69,0.0131,Good Posture
-11.45,55.0,0.0766,Slouching
-14.52,60.81,0.0377,Slouching
-42.23,76.02,0.0392,Slouching
-12.6,80.15,0.0123,Good Posture
-28.63,75.58,0.0358,Slouching
-55.0,62.18,0.0688,Slouching
-32.46,74.51,0.0403,Slouching
-16.21,86.7,0.0224,Good Posture
-25.76,60.36,0.0252,Slouching
-22.55,64.47,0.0243,Slouching
-30.27,56.41,0.0542,Slouching
-21.1,62.01,0.0373,Slouching
-49.04,89.05,0.0271,Forward Head
-4.71,87.51,0.0098,Good Posture
-37.95,67.59,0.0336,Slouching
-6.64,86.93,0.002,Good Posture
-11.68,93.2,0.0067,Good Posture
-4.0,85.11,0.002,Good Posture
-6.17,55.0,0.0801,Slouching
-9.75,89.85,0.002,Good Posture
-48.7,55.0,0.085,Slouching
-15.27,85.39,0.002,Good Posture
-10.26,90.53,0.0072,Good Posture
-5.49,94.59,0.0041,Good Posture
-9.6,92.43,0.0059,Good Posture
-20.48,91.83,0.011,Forward Head
-4.0,89.34,0.002,Good Posture
-4.91,60.12,0.0525,Slouching
-51.92,92.05,0.0312,Forward Head
-7.12,92.47,0.002,Good Posture
-4.0,94.11,0.002,Good Posture
-37.73,70.48,0.0418,Slouching
-7.76,88.96,0.0021,Good Posture
-26.65,88.72,0.0145,Forward Head
-28.14,89.49,0.017,Forward Head
-8.31,94.55,0.0056,Good Posture
-8.13,92.25,0.002,Good Posture
-4.0,88.78,0.002,Good Posture
-15.23,79.07,0.0155,Slouching
-20.24,82.95,0.0023,Forward Head
-6.87,93.88,0.0071,Good Posture
-4.0,91.54,0.0047,Good Posture
-4.0,93.6,0.0036,Good Posture
-4.11,92.88,0.0043,Good Posture
-9.35,87.99,0.002,Good Posture
-9.18,92.66,0.0063,Good Posture
-25.31,84.96,0.0037,Forward Head
-11.16,90.88,0.002,Good Posture
-35.76,58.06,0.0443,Slouching
-6.92,74.07,0.0194,Slouching
-25.58,86.79,0.0288,Forward Head
-8.01,90.3,0.0119,Good Posture
-14.5,63.78,0.0269,Slouching
-18.49,91.87,0.0125,Good Posture
-10.85,82.24,0.0099,Good Posture
-22.36,88.82,0.007,Forward Head
-10.98,88.03,0.0185,Good Posture
-22.32,93.4,0.014,Forward Head
-7.71,91.06,0.002,Good Posture
-22.47,60.79,0.0282,Slouching
-43.25,60.65,0.0405,Slouching
-24.12,86.5,0.0045,Forward Head
-24.41,81.13,0.017,Forward Head
-13.22,92.93,0.009,Good Posture
-23.66,91.38,0.0149,Forward Head
-4.0,87.02,0.002,Good Posture
-4.0,79.71,0.0032,Good Posture
-20.06,55.81,0.0384,Slouching
-26.32,77.32,0.0162,Slouching
-4.0,87.56,0.0054,Good Posture
-11.75,72.9,0.0179,Slouching
-40.41,88.21,0.0277,Forward Head
-30.75,90.56,0.0231,Forward Head
-34.05,82.07,0.0093,Forward Head
-38.05,55.0,0.0665,Slouching
-9.93,93.47,0.0078,Good Posture
-30.22,91.35,0.0244,Forward Head
-11.55,83.52,0.0209,Good Posture
-16.56,92.66,0.0067,Good Posture
-55.0,55.31,0.085,Slouching
-47.87,55.0,0.0609,Slouching
-10.01,91.9,0.0046,Good Posture
-7.05,91.88,0.0029,Good Posture
-7.97,89.66,0.002,Good Posture
-21.8,86.6,0.0172,Forward Head
-11.72,88.16,0.002,Good Posture
-8.12,84.28,0.0042,Good Posture
-10.39,87.97,0.0038,Good Posture
-4.0,85.82,0.0045,Good Posture
-4.0,72.78,0.0303,Slouching
-8.44,93.9,0.0074,Good Posture
-4.0,94.08,0.002,Good Posture
-4.0,82.11,0.0067,Good Posture
-43.03,92.44,0.0249,Forward Head
-8.31,92.91,0.0069,Good Posture
-55.0,61.52,0.0724,Slouching
-9.71,93.46,0.008,Good Posture
-4.39,87.98,0.0086,Good Posture
-22.64,88.51,0.011,Forward Head
-42.98,69.0,0.0519,Slouching
-7.86,91.14,0.0096,Good Posture
-4.0,93.71,0.002,Good Posture
-31.69,89.67,0.0189,Forward Head
-4.0,88.6,0.002,Good Posture
-24.22,80.18,0.016,Forward Head
-8.42,83.83,0.0104,Good Posture
-23.17,90.26,0.0106,Forward Head
-5.36,82.39,0.0033,Good Posture
-6.5,89.04,0.0085,Good Posture
-20.18,86.43,0.0142,Forward Head
-29.48,92.17,0.0153,Forward Head
-50.42,55.0,0.072,Slouching
-15.43,73.64,0.0213,Slouching
-4.0,80.64,0.0193,Good Posture
-27.24,77.43,0.0335,Slouching
-19.25,63.69,0.0556,Slouching
-25.0,81.61,0.0293,Forward Head
-39.06,69.79,0.0373,Slouching
-9.18,79.86,0.0062,Good Posture
-24.86,88.38,0.0132,Forward Head
-8.76,88.73,0.002,Good Posture
-36.41,83.18,0.0101,Forward Head
-4.0,80.48,0.0196,Good Posture
-20.67,81.46,0.0312,Forward Head
-4.0,80.27,0.0208,Good Posture
-19.19,80.91,0.0293,Good Posture
-21.1,84.24,0.0243,Forward Head
-15.62,63.41,0.0369,Slouching
-24.14,70.63,0.0267,Slouching
-11.05,77.26,0.0189,Slouching
-27.98,85.33,0.0233,Forward Head
-22.45,82.08,0.0253,Forward Head
-16.76,91.51,0.0172,Good Posture
-16.93,55.0,0.0688,Slouching
-21.66,89.45,0.0095,Forward Head
-4.0,85.89,0.0079,Good Posture
-18.4,84.87,0.0041,Good Posture
-4.0,92.61,0.0022,Good Posture
-42.99,55.0,0.0638,Slouching
-14.33,91.09,0.0085,Good Posture
-4.0,93.12,0.0054,Good Posture
-10.77,87.73,0.0048,Good Posture
-27.11,89.67,0.0083,Forward Head
-6.23,78.5,0.0084,Slouching
-4.12,85.07,0.0175,Good Posture
-27.38,82.19,0.0283,Forward Head
-36.71,63.7,0.0648,Slouching
-19.66,68.33,0.0361,Slouching
-4.0,79.75,0.002,Good Posture
-35.27,55.0,0.085,Slouching
+neck_angle,torso_angle,label
+27.26,59.86,Slouching
+24.3,93.4,Forward Head
+17.51,93.59,Good Posture
+13.75,90.21,Good Posture
+8.96,89.81,Good Posture
+22.48,84.17,Forward Head
+16.62,79.38,Slouching
+48.22,55.0,Slouching
+4.0,70.43,Slouching
+20.06,89.17,Forward Head
+35.38,81.5,Forward Head
+37.57,73.9,Slouching
+6.13,92.43,Good Posture
+7.62,74.7,Slouching
+55.0,55.0,Slouching
+7.37,85.84,Good Posture
+5.67,91.47,Good Posture
+4.0,86.52,Good Posture
+4.54,90.99,Good Posture
+7.97,72.36,Slouching
+4.0,84.09,Good Posture
+18.36,83.83,Good Posture
+19.95,75.32,Slouching
+55.0,55.0,Slouching
+11.88,72.69,Slouching
+18.44,91.82,Good Posture
+20.9,92.27,Forward Head
+6.44,82.63,Good Posture
+47.51,90.18,Forward Head
+4.39,93.18,Good Posture
+52.79,91.46,Forward Head
+47.0,67.54,Slouching
+13.06,78.07,Slouching
+4.0,84.48,Good Posture
+7.74,84.8,Good Posture
+12.63,87.09,Good Posture
+23.71,82.48,Forward Head
+36.33,76.36,Slouching
+11.5,91.84,Good Posture
+12.11,90.67,Good Posture
+14.91,67.73,Slouching
+11.14,94.73,Good Posture
+28.61,87.9,Forward Head
+11.79,85.11,Good Posture
+51.51,55.0,Slouching
+4.0,85.66,Good Posture
+49.89,66.15,Slouching
+4.0,72.33,Slouching
+55.0,74.14,Slouching
+23.55,58.93,Slouching
+4.0,86.15,Good Posture
+4.0,69.87,Slouching
+4.0,77.32,Slouching
+4.13,79.43,Slouching
+6.28,85.09,Good Posture
+17.95,92.47,Good Posture
+5.31,89.99,Good Posture
+4.0,65.15,Slouching
+9.02,93.29,Good Posture
+37.08,86.25,Forward Head
+30.24,61.67,Slouching
+13.62,69.45,Slouching
+55.0,55.0,Slouching
+20.84,55.0,Slouching
+35.8,55.0,Slouching
+27.92,79.43,Slouching
+26.1,92.96,Forward Head
+39.43,67.59,Slouching
+44.23,83.66,Forward Head
+48.3,70.17,Slouching
+11.92,85.18,Good Posture
+9.3,86.03,Good Posture
+6.52,82.53,Good Posture
+26.83,84.62,Forward Head
+19.88,74.91,Slouching
+4.0,55.0,Slouching
+14.0,81.88,Good Posture
+26.19,61.11,Slouching
+10.97,91.84,Good Posture
+4.04,90.88,Good Posture
+9.6,87.02,Good Posture
+4.0,77.12,Slouching
+17.02,61.02,Slouching
+12.81,84.44,Good Posture
+29.78,89.02,Forward Head
+19.37,91.54,Good Posture
+14.62,78.83,Slouching
+7.24,79.26,Slouching
+19.49,61.26,Slouching
+22.2,66.99,Slouching
+21.55,69.61,Slouching
+4.0,89.27,Good Posture
+11.66,71.2,Slouching
+25.54,85.83,Forward Head
+10.75,87.97,Good Posture
+10.51,62.85,Slouching
+8.76,55.0,Slouching
+16.65,76.48,Slouching
+35.24,69.06,Slouching
+24.51,91.95,Forward Head
+15.33,75.08,Slouching
+25.79,88.06,Forward Head
+8.06,74.96,Slouching
+23.92,84.48,Forward Head
+21.76,81.6,Forward Head
+28.22,88.38,Forward Head
+6.06,92.34,Good Posture
+14.03,82.33,Good Posture
+55.0,57.85,Slouching
+43.01,73.48,Slouching
+55.0,67.66,Slouching
+24.18,79.66,Forward Head
+26.19,88.84,Forward Head
+4.0,91.34,Good Posture
+7.84,62.75,Slouching
+15.05,81.87,Good Posture
+10.14,84.53,Good Posture
+19.14,55.0,Slouching
+8.91,85.99,Good Posture
+22.38,57.96,Slouching
+39.68,78.27,Slouching
+55.0,69.17,Slouching
+55.0,55.0,Slouching
+41.7,55.0,Slouching
+21.45,91.55,Forward Head
+30.95,80.5,Forward Head
+6.56,71.68,Slouching
+40.71,74.41,Slouching
+18.87,93.72,Good Posture
+19.01,86.26,Good Posture
+25.97,80.78,Forward Head
+32.11,86.92,Forward Head
+43.97,82.55,Forward Head
+26.72,89.23,Forward Head
+43.61,55.0,Slouching
+16.88,78.57,Slouching
+9.42,76.93,Slouching
+28.66,81.71,Forward Head
+6.6,94.55,Good Posture
+4.0,67.24,Slouching
+4.0,65.72,Slouching
+4.81,64.55,Slouching
+25.65,82.82,Forward Head
+18.3,91.51,Good Posture
+9.39,88.15,Good Posture
+16.08,86.09,Good Posture
+4.0,77.27,Slouching
+28.8,83.29,Forward Head
+55.0,55.7,Slouching
+14.07,91.69,Good Posture
+11.45,55.0,Slouching
+14.52,60.81,Slouching
+42.23,76.02,Slouching
+12.6,80.15,Good Posture
+28.63,75.58,Slouching
+55.0,62.18,Slouching
+32.46,74.51,Slouching
+16.21,86.7,Good Posture
+25.76,60.36,Slouching
+22.55,64.47,Slouching
+30.27,56.41,Slouching
+21.1,62.01,Slouching
+49.04,89.05,Forward Head
+4.71,87.51,Good Posture
+37.95,67.59,Slouching
+6.64,86.93,Good Posture
+11.68,93.2,Good Posture
+4.0,85.11,Good Posture
+6.17,55.0,Slouching
+9.75,89.85,Good Posture
+48.7,55.0,Slouching
+15.27,85.39,Good Posture
+10.26,90.53,Good Posture
+5.49,94.59,Good Posture
+9.6,92.43,Good Posture
+20.48,91.83,Forward Head
+4.0,89.34,Good Posture
+4.91,60.12,Slouching
+51.92,92.05,Forward Head
+7.12,92.47,Good Posture
+4.0,94.11,Good Posture
+37.73,70.48,Slouching
+7.76,88.96,Good Posture
+26.65,88.72,Forward Head
+28.14,89.49,Forward Head
+8.31,94.55,Good Posture
+8.13,92.25,Good Posture
+4.0,88.78,Good Posture
+15.23,79.07,Slouching
+20.24,82.95,Forward Head
+6.87,93.88,Good Posture
+4.0,91.54,Good Posture
+4.0,93.6,Good Posture
+4.11,92.88,Good Posture
+9.35,87.99,Good Posture
+9.18,92.66,Good Posture
+25.31,84.96,Forward Head
+11.16,90.88,Good Posture
+35.76,58.06,Slouching
+6.92,74.07,Slouching
+25.58,86.79,Forward Head
+8.01,90.3,Good Posture
+14.5,63.78,Slouching
+18.49,91.87,Good Posture
+10.85,82.24,Good Posture
+22.36,88.82,Forward Head
+10.98,88.03,Good Posture
+22.32,93.4,Forward Head
+7.71,91.06,Good Posture
+22.47,60.79,Slouching
+43.25,60.65,Slouching
+24.12,86.5,Forward Head
+24.41,81.13,Forward Head
+13.22,92.93,Good Posture
+23.66,91.38,Forward Head
+4.0,87.02,Good Posture
+4.0,79.71,Good Posture
+20.06,55.81,Slouching
+26.32,77.32,Slouching
+4.0,87.56,Good Posture
+11.75,72.9,Slouching
+40.41,88.21,Forward Head
+30.75,90.56,Forward Head
+34.05,82.07,Forward Head
+38.05,55.0,Slouching
+9.93,93.47,Good Posture
+30.22,91.35,Forward Head
+11.55,83.52,Good Posture
+16.56,92.66,Good Posture
+55.0,55.31,Slouching
+47.87,55.0,Slouching
+10.01,91.9,Good Posture
+7.05,91.88,Good Posture
+7.97,89.66,Good Posture
+21.8,86.6,Forward Head
+11.72,88.16,Good Posture
+8.12,84.28,Good Posture
+10.39,87.97,Good Posture
+4.0,85.82,Good Posture
+4.0,72.78,Slouching
+8.44,93.9,Good Posture
+4.0,94.08,Good Posture
+4.0,82.11,Good Posture
+43.03,92.44,Forward Head
+8.31,92.91,Good Posture
+55.0,61.52,Slouching
+9.71,93.46,Good Posture
+4.39,87.98,Good Posture
+22.64,88.51,Forward Head
+42.98,69.0,Slouching
+7.86,91.14,Good Posture
+4.0,93.71,Good Posture
+31.69,89.67,Forward Head
+4.0,88.6,Good Posture
+24.22,80.18,Forward Head
+8.42,83.83,Good Posture
+23.17,90.26,Forward Head
+5.36,82.39,Good Posture
+6.5,89.04,Good Posture
+20.18,86.43,Forward Head
+29.48,92.17,Forward Head
+50.42,55.0,Slouching
+15.43,73.64,Slouching
+4.0,80.64,Good Posture
+27.24,77.43,Slouching
+19.25,63.69,Slouching
+25.0,81.61,Forward Head
+39.06,69.79,Slouching
+9.18,79.86,Good Posture
+24.86,88.38,Forward Head
+8.76,88.73,Good Posture
+36.41,83.18,Forward Head
+4.0,80.48,Good Posture
+20.67,81.46,Forward Head
+4.0,80.27,Good Posture
+19.19,80.91,Good Posture
+21.1,84.24,Forward Head
+15.62,63.41,Slouching
+24.14,70.63,Slouching
+11.05,77.26,Slouching
+27.98,85.33,Forward Head
+22.45,82.08,Forward Head
+16.76,91.51,Good Posture
+16.93,55.0,Slouching
+21.66,89.45,Forward Head
+4.0,85.89,Good Posture
+18.4,84.87,Good Posture
+4.0,92.61,Good Posture
+42.99,55.0,Slouching
+14.33,91.09,Good Posture
+4.0,93.12,Good Posture
+10.77,87.73,Good Posture
+27.11,89.67,Forward Head
+6.23,78.5,Slouching
+4.12,85.07,Good Posture
+27.38,82.19,Forward Head
+36.71,63.7,Slouching
+19.66,68.33,Slouching
+4.0,79.75,Good Posture
+35.27,55.0,Slouching

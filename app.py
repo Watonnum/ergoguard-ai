@@ -239,7 +239,6 @@ def init_session_state() -> None:
             detected=True,
             neck_angle=11.5,
             torso_angle=94.5,
-            shoulder_tilt=0.010,
             active_side="NONE",
             view_mode="STANDBY",
             visibility_score=1.0,
@@ -312,8 +311,7 @@ with dock_c2:
         else:
             raw_n = getattr(cur_m, "raw_neck_angle", cur_m.neck_angle) or cur_m.neck_angle
             raw_t = getattr(cur_m, "raw_torso_angle", cur_m.torso_angle) or cur_m.torso_angle
-            raw_s = getattr(cur_m, "raw_shoulder_tilt", cur_m.shoulder_tilt) or cur_m.shoulder_tilt
-            st.session_state.pose_tracker.set_personal_baseline(raw_n, raw_t, raw_s)
+            st.session_state.pose_tracker.set_personal_baseline(raw_n, raw_t)
             st.session_state.rule_engine.reset()
             st.session_state.toast_feedback = "บันทึกท่านั่งมาตรฐานตามสรีระของคุณเรียบร้อยแล้ว (จำถาวร)"
 
@@ -360,7 +358,7 @@ with dock_c4:
                     st.session_state.toast_feedback = "กรุณาเปิดกล้องให้จับภาพก่อนกดสอนท่า"
                 else:
                     st.session_state.knn_classifier.add_calibration_sample(
-                        cur_m.neck_angle, cur_m.torso_angle, cur_m.shoulder_tilt, "Good Posture", replicas=8
+                        cur_m.neck_angle, cur_m.torso_angle, "Good Posture", replicas=8
                     )
                     st.session_state.toast_feedback = f"บันทึก 'ท่าปกติ' (คอ {cur_m.neck_angle:.0f}°, หลัง {cur_m.torso_angle:.0f}°) ถาวรแล้ว"
             if st.button("+ ท่าหลังค่อม", width="stretch"):
@@ -368,7 +366,7 @@ with dock_c4:
                     st.session_state.toast_feedback = "กรุณาเปิดกล้องให้จับภาพก่อนกดสอนท่า"
                 else:
                     st.session_state.knn_classifier.add_calibration_sample(
-                        cur_m.neck_angle, cur_m.torso_angle, cur_m.shoulder_tilt, "Slouching", replicas=8
+                        cur_m.neck_angle, cur_m.torso_angle, "Slouching", replicas=8
                     )
                     st.session_state.toast_feedback = f"บันทึก 'ท่าหลังค่อม' (คอ {cur_m.neck_angle:.0f}°, หลัง {cur_m.torso_angle:.0f}°) ถาวรแล้ว"
         with p_col2:
@@ -377,7 +375,7 @@ with dock_c4:
                     st.session_state.toast_feedback = "กรุณาเปิดกล้องให้จับภาพก่อนกดสอนท่า"
                 else:
                     st.session_state.knn_classifier.add_calibration_sample(
-                        cur_m.neck_angle, cur_m.torso_angle, cur_m.shoulder_tilt, "Forward Head", replicas=8
+                        cur_m.neck_angle, cur_m.torso_angle, "Forward Head", replicas=8
                     )
                     st.session_state.toast_feedback = f"บันทึก 'ท่าคอยื่น/เอียงคอ' (คอ {cur_m.neck_angle:.0f}°, หลัง {cur_m.torso_angle:.0f}°) ถาวรแล้ว"
             if st.button("รีเซ็ตข้อมูล", width="stretch"):
@@ -550,16 +548,15 @@ def render_stats_popover_content(
 # ---------------------------------------------------------------------------
 last_m: PoseMetrics = st.session_state.last_metrics
 pred_label, conf, dists = st.session_state.knn_classifier.predict(
-    last_m.neck_angle, last_m.torso_angle, last_m.shoulder_tilt
+    last_m.neck_angle, last_m.torso_angle
 )
 neighbors_info = st.session_state.knn_classifier.explain_neighbors(
-    last_m.neck_angle, last_m.torso_angle, last_m.shoulder_tilt
+    last_m.neck_angle, last_m.torso_angle
 )
 init_rule_res = st.session_state.rule_engine.evaluate(
     knn_label=pred_label,
     neck_angle=last_m.neck_angle,
     torso_angle=last_m.torso_angle,
-    shoulder_tilt=last_m.shoulder_tilt,
     override_bad_duration_sec=0.0,
 )
 render_stats_popover_content(last_m, neighbors_info, init_rule_res)
@@ -607,13 +604,11 @@ else:
                     pred_label, conf, dists = st.session_state.knn_classifier.predict(
                         live_metrics.neck_angle,
                         live_metrics.torso_angle,
-                        live_metrics.shoulder_tilt,
                     )
                     rule_res = st.session_state.rule_engine.evaluate(
                         knn_label=pred_label,
                         neck_angle=live_metrics.neck_angle,
                         torso_angle=live_metrics.torso_angle,
-                        shoulder_tilt=live_metrics.shoulder_tilt,
                     )
 
                     if rule_res.status == "ALERT" and st.session_state.sound_on:
@@ -632,7 +627,6 @@ else:
                         live_neighbors = st.session_state.knn_classifier.explain_neighbors(
                             live_metrics.neck_angle,
                             live_metrics.torso_angle,
-                            live_metrics.shoulder_tilt,
                         )
                         render_stats_popover_content(
                             live_metrics,
